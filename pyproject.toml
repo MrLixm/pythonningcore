@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "pythonningcore"
+version = "0.1.0"
+description = "No dependencies package offering commonly used code to help at python development."
+authors = ["Liam Collod <lcollod@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">2.7"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+
+[tool.pydocstyle]
+convention = "google"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
