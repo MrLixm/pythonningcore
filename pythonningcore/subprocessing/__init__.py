@@ -8,7 +8,7 @@ from pythonningcore.py23.helpers import typing_available
 from . import c
 
 if typing_available:
-    from typing import Sequence, Optional, AnyStr, List
+    from typing import Sequence, Optional, AnyStr, List, Any
 
 __all__ = ("formatSubprocessError", "callBasic")
 
@@ -32,7 +32,7 @@ def formatSubprocessError(code, args, error):
 
 
 def callBasic(command, error_tip=None, **kwargs):
-    # type: (List[str], Optional[str]) -> AnyStr
+    # type: (List[str], Optional[str], Any) -> AnyStr
     """
     Basic implementation of subprocess.Popen() that handle errors.
 
@@ -43,6 +43,9 @@ def callBasic(command, error_tip=None, **kwargs):
 
     Returns:
         result of the subprocess call from stdout
+
+    Raises:
+        RuntimeError: if process returned non-zero exit code.
     """
     process = subprocess.Popen(command, stdout=subprocess.PIPE, **kwargs)
     stdoutdata, stderrdata = process.communicate()

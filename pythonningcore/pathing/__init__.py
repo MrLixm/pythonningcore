@@ -1,11 +1,15 @@
+"""
+TODO: this should be moved to its own module later
+"""
+
 import errno
 import os
 import shutil
 import stat
 
-import pythonningcore.py23.helpers
+from pythonningcore.py23.helpers import typing_available
 
-if pythonningcore.py23.helpers.typing_available:
+if typing_available:
     import typing
 
 __all__ = ("clearDir",)
