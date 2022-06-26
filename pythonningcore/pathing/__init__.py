@@ -14,8 +14,6 @@ import pythonningcore.py23.helpers
 
 from . import c
 
-if pythonningcore.py23.helpers.isModuleAvailable("typing"):
-    from typing import Optional
 if pythonningcore.py23.helpers.isModuleAvailable("pathlib"):
     from pathlib import Path
 
@@ -56,21 +54,25 @@ def clearDir(path, force=True):
     else:
         shutil.rmtree(path, ignore_errors=False)
 
+    logger.info("[clearDir] Finished for {}".format(path))
     return
 
 
-def createSymLink(source, target):
-    # type: (str | Path, str | Path) -> Optional[str]
+def createSymLink(source_dir, target_dir, hard=False):
+    # type: (str | Path, str | Path, bool) -> str
     """
-    Create the symlink of the active developed version in the /publish directory.
-    Only supported on Windows for now.
+    Create and make the target_dir a virtual copy (link) of source_dir.
+
+    A hard link makes it appear as though the file or folder actually exists at
+    the location of the symbolic link while soft just redirects.
 
     Args:
-        source:
-        target:
+        source_dir: directory path, MUST exist
+        target_dir: directory path, MUST not exist
+        hard: True to create a hard link instead of a soft link.
 
     Returns:
-        path to the created symlink
+        path to the created symlink (target_dir)
 
     Raises:
         AssertionError: if the symlink was not created
@@ -81,18 +83,20 @@ def createSymLink(source, target):
             "Current OS {} used is not supported.".format(platform.system())
         )
 
-    source = str(source)
-    target = str(target)
+    source_dir = str(source_dir)
+    target_dir = str(target_dir)
 
-    if os.path.exists(target):
-        logger.warning(
-            "[createSymLink] target symlink dir already exists: {}".format(target)
-        )
-        return
+    assert not os.path.exists(
+        target_dir
+    ), "[createSymLink] target symlink dir already exists: {}".format(target_dir)
 
-    subprocess.call("mklink /D {} {}".format(target, source))
-    assert os.path.exists(
-        target
-    ), "Symlink not created ! Source[{}] to target[{}]".format(source, target)
-    logger.info("[createSymLink] Finished. Created at {}".format(target))
-    return target
+    command_option = "/J" if hard else "/D"
+    command = ["mklink", command_option, target_dir, source_dir]
+    subprocess.call(command)
+
+    assert os.path.exists(target_dir), "Symlink not created for {} --> {}".format(
+        source_dir, target_dir
+    )
+
+    logger.info("[createSymLink] Finished. Created at {}".format(target_dir))
+    return target_dir
