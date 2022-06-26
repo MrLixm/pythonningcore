@@ -7,9 +7,9 @@ import os
 import shutil
 import stat
 
-from pythonningcore.py23.helpers import typing_available
+import pythonningcore.py23.helpers
 
-if typing_available:
+if pythonningcore.py23.helpers.isModuleAvailable("typing"):
     import typing
 
 __all__ = ("clearDir",)
