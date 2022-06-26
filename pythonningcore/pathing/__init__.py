@@ -3,20 +3,29 @@ TODO: this should be moved to its own module later
 """
 
 import errno
+import logging
 import os
+import platform
 import shutil
 import stat
+import subprocess
 
 import pythonningcore.py23.helpers
 
+from . import c
+
 if pythonningcore.py23.helpers.isModuleAvailable("typing"):
-    import typing
+    from typing import Optional
+if pythonningcore.py23.helpers.isModuleAvailable("pathlib"):
+    from pathlib import Path
 
 __all__ = ("clearDir",)
 
+logger = logging.getLogger("{}".format(c.abr))
+
 
 def clearDir(path, force=True):
-    # type: (str, bool) -> None
+    # type: (str | Path, bool) -> None
     """
     Completely delete the given directory and its content.
 
@@ -48,3 +57,42 @@ def clearDir(path, force=True):
         shutil.rmtree(path, ignore_errors=False)
 
     return
+
+
+def createSymLink(source, target):
+    # type: (str | Path, str | Path) -> Optional[str]
+    """
+    Create the symlink of the active developed version in the /publish directory.
+    Only supported on Windows for now.
+
+    Args:
+        source:
+        target:
+
+    Returns:
+        path to the created symlink
+
+    Raises:
+        AssertionError: if the symlink was not created
+        NotImplementedError: if the current OS is not supported
+    """
+    if platform.system() != "Windows":
+        raise NotImplementedError(
+            "Current OS {} used is not supported.".format(platform.system())
+        )
+
+    source = str(source)
+    target = str(target)
+
+    if os.path.exists(target):
+        logger.warning(
+            "[createSymLink] target symlink dir already exists: {}".format(target)
+        )
+        return
+
+    subprocess.call("mklink /D {} {}".format(target, source))
+    assert os.path.exists(
+        target
+    ), "Symlink not created ! Source[{}] to target[{}]".format(source, target)
+    logger.info("[createSymLink] Finished. Created at {}".format(target))
+    return target
