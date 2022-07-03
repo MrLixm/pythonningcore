@@ -7,7 +7,7 @@ import sys
 import pythonningcore.py23.helpers
 
 if pythonningcore.py23.helpers.isModuleAvailable("typing"):
-    from typing import List, Tuple
+    from typing import List, Tuple, Sequence
 
 __all__ = ("setupLogger", "setupLoggingFor")
 
@@ -44,15 +44,12 @@ def setupLogger(logger_name, level):
 
 
 def setupLoggingFor(loggers, level=logging.DEBUG):
-    # type: (List[str | Tuple[str, int]], int) -> None
+    # type: (Sequence[str | Tuple[str, int]], int) -> None
     """
 
     Args:
-        level:
-        loggers:
-
-    Returns:
-
+        loggers: list of logger names to setup with an optional level
+        level: optional if level is specified per logger in the logegrs arg
     """
 
     for loggerdata in loggers:
