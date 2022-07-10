@@ -17,7 +17,11 @@ from . import c
 if pythonningcore.py23.helpers.isModuleAvailable("pathlib"):
     from pathlib import Path
 
-__all__ = ("clearDir", "createSymLink")
+__all__ = (
+    "clearDir",
+    "copyDir",
+    "createSymLink",
+)
 
 logger = logging.getLogger("{}".format(c.abr))
 
@@ -55,6 +59,44 @@ def clearDir(path, force=True):
         shutil.rmtree(path, ignore_errors=False)
 
     logger.info("[clearDir] Finished for {}".format(path))
+    return
+
+
+def copyDir(source, target, mirror=False):
+    # type: (str|Path, str|Path, bool) -> None
+    """
+
+    Args:
+        source:
+        target:
+        mirror:
+            (destructive) if True overwrite ALL the target dir content with source's one.
+
+    Returns:
+
+    """
+    if platform.system() != "Windows":
+        raise NotImplementedError(
+            "Current OS {} used is not supported.".format(platform.system())
+        )
+
+    args = [
+        "robocopy",
+        str(source),
+        str(target),
+        # copy option
+        "/E",
+        "/MIR" if mirror else "",  # overwrite the target dir with source content
+        # logging options
+        "/nfl",  # no file names are not to be logged.
+        "/ndl",  # no directory names logged.
+        "/np",  # no progress of the copying operation
+        "/njh",  # no job header.
+        # "/njs",  # no job summary.
+    ]
+    logger.info("[copyDir] copying <{}> to <{}> ...".format(source, target))
+    subprocess.call(args)
+    logger.info("[copyDir] Finished.")
     return
 
 
