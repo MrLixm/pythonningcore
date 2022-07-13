@@ -62,8 +62,8 @@ def clearDir(path, force=True):
     return
 
 
-def copyDir(source, target, mirror=False):
-    # type: (str|Path, str|Path, bool) -> None
+def copyDir(source, target, mirror=False, debug=False):
+    # type: (str|Path, str|Path, bool, bool) -> None
     """
 
     Args:
@@ -71,6 +71,8 @@ def copyDir(source, target, mirror=False):
         target:
         mirror:
             (destructive) if True overwrite ALL the target dir content with source's one.
+        debug:
+            if True diplay additional information about the result of the copy operation
 
     Returns:
 
@@ -92,7 +94,7 @@ def copyDir(source, target, mirror=False):
         "/ndl",  # no directory names logged.
         "/np",  # no progress of the copying operation
         "/njh",  # no job header.
-        # "/njs",  # no job summary.
+        "/njs" if debug else "",  # no job summary.
     ]
     logger.info("[copyDir] copying <{}> to <{}> ...".format(source, target))
     subprocess.call(args)
