@@ -94,7 +94,7 @@ def copyDir(source, target, mirror=False, debug=False):
         "/ndl",  # no directory names logged.
         "/np",  # no progress of the copying operation
         "/njh",  # no job header.
-        "/njs" if debug else "",  # no job summary.
+        "" if debug else "/njs",  # no job summary.
     ]
     logger.info("[copyDir] copying <{}> to <{}> ...".format(source, target))
     subprocess.call(args)
