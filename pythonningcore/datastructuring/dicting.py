@@ -85,19 +85,20 @@ class DiskDict:
             json.dump(content, file, indent=4)
         return
 
-    def debug(self):
+    def debug(self, log=False):
+        # type: (bool) -> str
         """
-        Log the content of the preferences.
+        Return a message that can be used for debugging purposes.
+        If log=True also log it with the module logger (at DEBUG level)
         """
-        logger.debug(
-            "[{}][debug] {}:\n{}"
-            "".format(
-                self.__class__.__name__,
-                self.path,
-                json.dumps(self._read(), indent=4),
-            )
+        msg = "[{}][debug] {}:\n{}".format(
+            self.__class__.__name__,
+            self.path,
+            json.dumps(self._read(), indent=4),
         )
-        return
+        if log:
+            logger.debug(msg)
+        return msg
 
     def get(self, key, default=None):
         # type: (str, Any | None) -> Any
