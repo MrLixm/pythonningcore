@@ -8,7 +8,7 @@ This file is regex-parsed, please DON'T:
 """
 
 name = "pythonningcore"
-version = "0.3.0"
+version = "0.4.0"
 
 authors = ["Liam Collod <lcollod@gmail.com>"]
 description = (

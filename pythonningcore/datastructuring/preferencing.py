@@ -34,18 +34,19 @@ import os
 from abc import ABC, abstractmethod, abstractproperty
 from functools import cache
 
-import pythonningcore.py23.helpers
+from pythonningcore import py23
 
 from . import c
 from . import dicting
 
-if pythonningcore.py23.helpers.isModuleAvailable("pathlib"):
+if py23.helpers.isModuleAvailable("pathlib"):
     from pathlib import Path
-if pythonningcore.py23.helpers.isModuleAvailable("typing"):
+if py23.helpers.isModuleAvailable("typing"):
     from typing import Any, Type
 
 __all__ = (
     "BaseKey",
+    "BaseKeyCategories",
     "BasePreferences",
     "BasePreferencesFile",
 )
@@ -57,6 +58,25 @@ PreferencesContainer = dicting.DiskDict
 """
 Base class for directly manipulating data storing preferences on disk.
 """
+
+
+class BaseKeyCategories(py23.Enum):
+    """
+    Store the categories from the preferences keys.
+
+    A key can only belongs to a single category. The category is not stored on disk
+    and is only assigned in the package when subclass BaseKey.
+
+    Each Enum attribute value correspond to its "pretty name". The string must be
+    formatted as per the str.title() method.
+
+    .. You CAN'T set attributes on this class else it can't be subclassed.
+
+    """
+
+    @classmethod
+    def __all__(cls):
+        return [attr for attr in cls]
 
 
 class BaseKey(ABC):
@@ -84,6 +104,7 @@ class BaseKey(ABC):
 
     # to override in subclass
     name = NotImplemented  # type: str
+    category = NotImplemented  # type: BaseKeyCategories
     types = NotImplemented  # type: tuple[Type]
     default = NotImplemented  # type: Any
 
@@ -92,7 +113,7 @@ class BaseKey(ABC):
         self.source = pref_storage  # type: PreferencesContainer
 
     def __str__(self):
-        return "{} = {}".format(self.name, self.value)
+        return "{}={}".format(self.name, self.value)
 
     @property
     def value(self):

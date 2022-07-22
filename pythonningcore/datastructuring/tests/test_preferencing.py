@@ -74,5 +74,36 @@ class PreferencesFileTest(unittest.TestCase):
         pref.validate()
 
 
+class BaseKeyCategoriesTest(unittest.TestCase):
+    class KeyCategoriesA(preferencing.BaseKeyCategories):
+        general = "General"
+
+    class KeyCategoriesB(preferencing.BaseKeyCategories):
+        account = "Account"
+        version_control = "Version Control"
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        PREF_TARGET_A.unlink(missing_ok=True)
+
+    def _log(self, *args):
+        msg = "[{}] ".format(self.id().split(".", 1)[-1])
+        args = map(str, args)
+        msg += " ".join(args)
+        logger.info(msg)
+        return
+
+    def test_init(self):
+
+        cat_1 = self.KeyCategoriesA.general
+        cat_2 = self.KeyCategoriesA.general
+        self.assertEqual(cat_1, cat_2)
+
+        self.assertIn(cat_1, self.KeyCategoriesA.__all__())
+        self.assertNotIn(cat_1, self.KeyCategoriesB.__all__())
+
+
 if __name__ == "__main__":
     unittest.main()
