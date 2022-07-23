@@ -31,7 +31,8 @@ from __future__ import annotations
 import json
 import logging
 import os
-from abc import ABC, abstractmethod, abstractproperty
+import abc
+from abc import abstractmethod, abstractproperty
 from functools import cache
 
 from pythonningcore import py23
@@ -39,6 +40,7 @@ from pythonningcore import py23
 from . import c
 from . import dicting
 
+ABC = abc.ABCMeta("ABC", (object,), {"__slots__": ()})
 if py23.helpers.isModuleAvailable("pathlib"):
     from pathlib import Path
 if py23.helpers.isModuleAvailable("typing"):
@@ -90,8 +92,10 @@ class BaseKey(ABC):
 
         class key_name(PreferenceKey):
             name = "key_name"
+            category = KeyCategories.something
             types = (Type, Type, ...)
             default = Any
+            tooltip = "Doing something"
 
             def validateValue(self):
                 pass
@@ -107,6 +111,7 @@ class BaseKey(ABC):
     category = NotImplemented  # type: BaseKeyCategories
     types = NotImplemented  # type: tuple[Type]
     default = NotImplemented  # type: Any
+    tooltip = NotImplemented  # type: str
 
     def __init__(self, pref_storage):
         # type: (PreferencesContainer) -> None
