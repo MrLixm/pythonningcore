@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "pythonningcore"
-version = "0.4.1"
+version = "0.5.0"
 description = "No dependencies package offering commonly used code to help at python development."
 authors = ["Liam Collod <lcollod@gmail.com>"]
+keywords = ["python", "boilerplate", "utility"]
 
 [tool.poetry.dependencies]
 python = ">2.7"
