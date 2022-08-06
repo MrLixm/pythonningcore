@@ -1,6 +1,9 @@
 import re
 
-__all__ = ("generateAbreviationFromName",)
+__all__ = (
+    "generateAbreviationFromName",
+    "stringToXmlString",
+)
 
 
 def generateAbreviationFromName(name):
@@ -37,3 +40,28 @@ def generateAbreviationFromName(name):
         out = re.sub(r"[AEIOU]", "", name, flags=re.IGNORECASE)
 
     return out
+
+
+def stringToXmlString(source):
+    # type: (str) -> str
+    """
+    Convert the given string to a xml compatible one line string.
+    All not supported characters will be escaped.
+
+    SRC: https://stackoverflow.com/a/65450788/13806195
+
+    Args:
+        source:
+
+    Returns:
+
+    """
+    subtable = {
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        "'": "&apos;",
+        '"': "&quot;",
+    }
+    pattern = re.compile("({})".format("|".join(subtable)))
+    return pattern.sub(lambda match: subtable[match.group(0)], repr(source))
