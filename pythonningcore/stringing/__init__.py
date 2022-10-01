@@ -63,5 +63,6 @@ def stringToXmlString(source):
         "'": "&apos;",
         '"': "&quot;",
     }
-    pattern = re.compile("({})".format("|".join(subtable)))
+    regex_subtable = {re.escape(k): v for k, v in subtable.items()}
+    pattern = re.compile("({})".format("|".join(regex_subtable)))
     return pattern.sub(lambda match: subtable[match.group(0)], repr(source))
